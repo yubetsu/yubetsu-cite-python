@@ -114,7 +114,7 @@ class Publication:
             elif index == 1:
                 return f"and {first_name} {last_name}"
         elif total_authors > 2 and index == 0:
-            return f"{last_name}, {first_name} et al."
+            return f"{last_name}, {first_name} et al"
 
     def format_authors_mla(self) -> str:
         """
