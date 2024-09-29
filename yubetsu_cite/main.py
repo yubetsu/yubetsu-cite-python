@@ -91,7 +91,13 @@ class Publication:
             return ', '.join(formatted_authors[:19]) + ", ... " + formatted_authors[-1]
 
     def format_author_mla(self, author: str, index: int, total_authors: int) -> str:
-        """Formats author names into MLA style."""
+        """
+        Converts author names into MLA style (First Last) and applies MLA rules for multiple authors.
+        :param author: Author name string in various formats
+        :param index: Author index to determine whether to apply 'et al.' for 3+ authors
+        :param total_authors: Total number of authors in the list
+        :return: Formatted author string in MLA style
+        """
         name_parts = re.split(r'\s+', author.strip())
         if len(name_parts) < 2:
             raise CitationError(f"Invalid author format: {author}")
@@ -99,15 +105,22 @@ class Publication:
         first_name = ' '.join(name_parts[:-1])
         last_name = name_parts[-1]
 
+        # MLA rules for multiple authors
         if total_authors == 1:
             return f"{last_name}, {first_name}"
         elif total_authors == 2:
-            return f"{last_name}, {first_name} and {first_name} {last_name}"
+            if index == 0:
+                return f"{last_name}, {first_name}"
+            elif index == 1:
+                return f"and {first_name} {last_name}"
         elif total_authors > 2 and index == 0:
-            return f"{last_name}, {first_name} et al"
+            return f"{last_name}, {first_name} et al."
 
     def format_authors_mla(self) -> str:
-        """Formats the list of authors according to MLA style."""
+        """
+        Formats the list of authors according to MLA style and multiple author rules.
+        :return: Formatted authors in MLA style
+        """
         formatted_authors = []
         total_authors = len(self.authors)
 
@@ -291,7 +304,7 @@ class Publication:
             authors = self.format_authors_ama()
             citation = f"{authors}. {self.title}. {self.journal}. {self.year};"
             if self.volume:
-                citation += f" {self.volume}"
+                citation += f"{self.volume}"
             if self.issue:
                 citation += f"({self.issue})"
             if self.pages:
